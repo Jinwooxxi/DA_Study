@@ -18,7 +18,7 @@
 
 
 ## Growth Team
-
+책을 통해 Growth Team에 대해 학습
 1) 진화된 마케팅 그로스해킹 - Growth Hacking (2주차)
 2) 린 분석 - Lean Analytics (3주차)
 3) 팩트풀니스 - Factfulness
