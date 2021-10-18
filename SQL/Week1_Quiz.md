@@ -70,6 +70,7 @@ WHERE productdescription IS NULL
 SELECT vendname 
 FROM vendors v 
 WHERE vendstate = 'NY' OR vendstate = 'WA'
+-- WHERE venderstate IN ('NY', 'WA')
 ```
 
 * 문제10번)  customers 테이블을 이용하여, 고객의 id 별로,  custstate 지역 중 WA 지역에 사는 사람과  WA 가 아닌 지역에 사는 사람을 구분해서  보여주세요.
