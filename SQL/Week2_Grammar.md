@@ -80,6 +80,12 @@ SELECT 컬럼1
 FROM 테이블
 GROUP BY 그룹화 할 컬럼
 ```
+```sql
+SELECT rating , count(*) 
+FROM film f 
+GROUP BY rating 
+-- 평점으로 그룹화
+```
 * 선 조건 후 그룹화
 ```sql
 SELECT 컬럼1
@@ -87,12 +93,26 @@ FROM 테이블
 WHERE 조건
 GROUP BY 그룹화 할 컬럼
 ```
+```sql
+SELECT customer_id , count(*)
+FROM rental r 
+WHERE date(rental_date) = '2005-05-26'
+GROUP BY customer_id 
+-- 선 조건 : 날짜가 2005-05-26인 데이터 
+```
 * 선 그룹화 후 조건
 ```sql
 SELECT 컬럼1
 FROM 테이블
 GROUP BY 그룹화 할 컬럼
 HAVING 조건
+```
+```sql
+SELECT customer_id , count(*)
+FROM rental r 
+GROUP BY customer_id 
+HAVING count(*) >= 30
+-- 후 조건 : 대여 수량이 30번 이상인 데이터
 ```
 
 ## 집합연산자와 서브쿼리
