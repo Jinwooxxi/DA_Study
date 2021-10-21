@@ -141,3 +141,146 @@ JOIN customer c ON r.customer_id = c.customer_id
 JOIN staff s ON r.staff_id = s.staff_id 
 WHERE date(r.rental_date) BETWEEN '2005-06-01' AND '2005-06-14' AND s.first_name ||' '|| s.last_name NOT IN ('Mike Hillyer')
 ```
+
+## No.4
+
+- 문제1번) store 별로 staff는 몇명이 있는지 확인해주세요.
+```sql
+SELECT store_id, count(*)
+FROM staff s 
+GROUP BY store_id 
+```
+
+- 문제2번) 영화등급(rating) 별로 몇개 영화film을 가지고 있는지 확인해주세요.
+```sql
+SELECT rating , count(*) 
+FROM film f 
+GROUP BY rating 
+```
+
+- 문제3번) 출현한 영화배우(actor)가 10명 초과한 영화명은 무엇인가요?
+```sql
+SELECT f.title 
+FROM (SELECT fa.film_id, count(*)
+	  FROM film_actor fa 
+	  GROUP BY fa.film_id 
+	  HAVING count(*) > 10) fcnt
+JOIN film f ON f.film_id = fcnt.film_id
+```
+
+- 문제4번) 영화 배우(actor)들이 출연한 영화는 각각 몇 편인가요?
+  - 영화 배우의 이름 , 성 과 함께 출연 영화 수를 알려주세요.
+```sql
+SELECT a.first_name , a.last_name , acnt.cnt
+FROM (SELECT fa.actor_id , count(*) AS cnt
+	  FROM film_actor fa 
+	  GROUP BY fa.actor_id) acnt
+JOIN actor a ON a.actor_id = acnt.actor_id
+```
+
+- 문제5번) 국가(country)별 고객(customer) 는 몇명인가요?
+```sql
+SELECT c.country , count(*)
+FROM country c 
+JOIN city c2 ON c.country_id  = c2.country_id 
+JOIN address a ON c2.city_id = a.city_id 
+JOIN customer c3 ON a.address_id = c3.address_id 
+GROUP BY c.country 
+```
+
+- 문제6번) 영화 재고 (inventory) 수량이 3개 이상인 영화(film) 는?
+  - store는 상관 없이 확인해주세요.
+```sql
+SELECT f.title , fcnt.cnt
+FROM (SELECT i.film_id, count(*) AS cnt
+	  FROM inventory i
+	  GROUP BY i.film_id
+	  HAVING count(*) > 3) fcnt
+JOIN film f ON f.film_id = fcnt.film_id
+```
+
+- 문제7번) dvd 대여를 제일 많이한 고객 이름은?
+```sql
+SELECT c.first_name , c.last_name 
+FROM (SELECT r.customer_id , count(*) AS cnt
+	FROM rental r 
+	GROUP BY r.customer_id 
+	) cus
+JOIN customer c ON cus.customer_id = c.customer_id 
+ORDER BY cus.cnt DESC 
+LIMIT 1
+```
+
+- 문제8번) rental 테이블을  기준으로,   2005년 5월26일에 대여를 기록한 고객 중, 하루에 2번 이상 대여를 한 고객의 ID 값을 확인해주세요.
+```sql
+SELECT customer_id , count(*)
+FROM rental r 
+WHERE date(rental_date) = '2005-05-26'
+GROUP BY customer_id 
+HAVING count(*) >= 2
+```
+
+- 문제9번) film_actor 테이블을 기준으로, 출현한 영화의 수가 많은  5명의 actor_id 와 , 출현한 영화 수 를 알려주세요.
+```sql
+SELECT actor_id , count(*)
+FROM film_actor fa
+GROUP BY actor_id 
+ORDER BY count(*) DESC 
+LIMIT 5
+```
+
+- 문제10번) payment 테이블을 기준으로,  결제일자가 2007년2월15일에 해당 하는 주문 중에서  ,  하루에 2건 이상 주문한 고객의  총 결제 금액이 10달러 이상인 고객에 대해서 알려주세요. (고객의 id,  주문건수 , 총 결제 금액까지 알려주세요)
+```sql
+SELECT customer_id , count(*), sum(amount)
+FROM payment p 
+WHERE date(payment_date) = '2007-02-15'
+GROUP BY customer_id 
+HAVING count(*) >= 2 AND sum(amount) >= 10
+```
+
+- 문제11번) 사용되는 언어별 영화 수는?
+```sql
+SELECT l."name" , count(*)
+FROM "language" l 
+JOIN film f ON l.language_id = f.language_id 
+GROUP BY l."name" 
+-- 언어명 별 카운트 
+```
+```sql
+SELECT language_id , count(*)
+FROM film f 
+GROUP BY language_id 
+-- 언어 아이디별 카운트 
+```
+
+- 문제12번) 40편 이상 출연한 영화 배우(actor) 는 누구인가요?
+```sql
+SELECT a.first_name , a.last_name 
+FROM (SELECT fa.actor_id, count(*) AS cnt 
+	  FROM film_actor fa
+	  GROUP BY fa.actor_id
+	  HAVING count(*) >= 40) fcnt
+JOIN actor a ON fcnt.actor_id = a.actor_id
+```
+
+- 문제13번) 고객 등급별 고객 수를 구하세요. (대여 금액 혹은 매출액  에 따라 고객 등급을 나누고 조건은 아래와 같습니다.)
+```
+A 등급은 151 이상
+B 등급은 101 이상 150 이하
+C 등급은   51 이상 100 이하
+D 등급은   50 이하
+- 대여 금액의 소수점은 반올림 하세요.
+HINT
+반올림 하는 함수는 ROUND 입니다.	
+```
+```sql
+SELECT CASE WHEN rating.total >= 151 THEN 'A'
+	WHEN rating.total BETWEEN 101 AND 150 THEN 'B'
+	WHEN rating.total BETWEEN 51 AND 100 THEN 'C'
+	WHEN rating.total <= 50 THEN 'D' END AS grade, count(*) 
+FROM (SELECT customer_id , round(sum(amount)) AS total 
+	FROM payment p 
+	GROUP BY customer_id ) rating  
+GROUP BY grade
+ORDER BY grade ASC 
+```
