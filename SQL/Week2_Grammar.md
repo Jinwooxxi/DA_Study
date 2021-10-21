@@ -116,9 +116,36 @@ HAVING count(*) >= 30
 ```
 
 ## 집합연산자와 서브쿼리
+* Union, Union All, Intersect, Except : column 수와 데이터 유형이 동일해야 가능
 
-### Union, Union All
+### Union, Union All - 합집합
+* Union : 두 테이블을 중복 제거 후 위,아래로 합친 결과를 출력
+* Union ALL : 두 테이블을 중복 여부와 상관없이 위,아래로 합친 결과를 출력
+* Python의 pd.concat(axis=0) 과 유사
+```sql
+SELECT *
+FROM table1
+UNION
+SELECT *
+FROM table2
+```
 
-### Intersect
+### Intersect - 교집합
+* 두 테이블의 중복되는(동일한 값)행 만을 출력
+```sql
+SELECT *
+FROM table1
+INTERSECT
+SELECT *
+FROM table2
+```
 
-### Except
+### Except - 차집합
+* 두 테이블의 중복되지(고유값) 않는 행 만을 출력
+```sql
+SELECT *
+FROM table1
+EXCEPT
+SELECT *
+FROM table2
+```
