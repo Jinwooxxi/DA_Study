@@ -8,8 +8,8 @@ FROM 테이블명
 ```
 
 ## `orderby`
-  + ORDER BY 정렬할 컬럼 ASC  → 오름차순
-  + ORDER BY 정렬할 컬럼 DESC → 내림차순
+  + ORDER BY 정렬할 컬럼 `ASC`  → 오름차순
+  + ORDER BY 정렬할 컬럼 `DESC` → 내림차순
 ```sql
 SELECT 컬럼1, 컬럼2
 FROM 테이블명
@@ -18,7 +18,7 @@ ORDER BY 컬럼1 ASC
 ```
 
 ## `select distinct`
-  + 고유값(Uniqu) 값을 호출할 때 사용
+  + 고유값(Unique) 값을 호출할 때 사용
 ```sql
 SELECT DISTINCT 컬럼1
 FROM 테이블명
@@ -27,7 +27,7 @@ FROM 테이블명
 ## `where`
   + 필요한 정보를 추출하기 위해 조건을 사용할 떄
   + =, >, >=, <, <=, !=
-  + AND, OR 연산자로 다중 조건 사용 가능
+  + `AND`, `OR` 연산자로 다중 조건 사용 가능
 ```sql
 SELECT *
 FROM price
@@ -45,7 +45,7 @@ LIMIT 10
 ```
 
 ## `Fetch`
-  + OFFEST(시작점)부터 FETCH에서의 숫자만큼 행을 제한(갯수 지정)하여 조회
+  + `OFFEST`(시작점)부터 `FETCH`에서의 숫자만큼 행을 제한(갯수 지정)하여 조회
 ```sql
 SELECT address_id , district 
 FROM address a 
