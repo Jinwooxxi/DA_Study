@@ -298,8 +298,8 @@ actor_id 가 동일한 flag 값 이 여러개 나오지 않도록 해주세요.
 SELECT fa.actor_id, 'over 180 min' AS flag
 FROM film_actor fa 
 WHERE fa.film_id IN (SELECT f.film_id 
-		  			 FROM film f
-			         WHERE f.length >= 180)
+		     FROM film f
+		     WHERE f.length >= 180)
 UNION 
 SELECT fa.actor_id , 'rating R ' AS flag
 FROM film_actor fa 
