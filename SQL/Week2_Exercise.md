@@ -304,8 +304,8 @@ UNION
 SELECT fa.actor_id , 'rating R ' AS flag
 FROM film_actor fa 
 WHERE fa.film_id IN (SELECT f.film_id 
-		  			 FROM film f
-			         WHERE f.rating = 'R')
+		     FROM film f
+		     WHERE f.rating = 'R')
 ORDER BY actor_id 
 ```
 
