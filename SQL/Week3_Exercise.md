@@ -2,17 +2,65 @@
 
 ## No.6
 * 문제1번) 매출을 가장 많이 올린 dvd 고객 이름은? (subquery 활용)
-
+```sql
+SELECT first_name 
+FROM customer c 
+WHERE c.customer_id IN (SELECT p.customer_id
+    FROM payment p
+    GROUP BY p.customer_id
+    ORDER BY sum(amount) DESC 
+    LIMIT 1)
+```
 * 문제2번) 대여가 한번도이라도 된 영화 카테 고리 이름을 알려주세요. (쿼리는, Exists조건을 이용하여 풀어봅시다)
-
+```sql
+SELECT c."name" 
+FROM category c
+WHERE EXISTS (SELECT fc.category_id 
+    FROM rental r 
+    JOIN inventory i ON r.inventory_id = i.inventory_id 
+    JOIN film_category fc ON i.film_id = fc.film_id
+    WHERE fc.category_id = c.category_id)
+```
 * 문제3번) 대여가 한번도이라도 된 영화 카테 고리 이름을 알려주세요. (쿼리는, Any 조건을 이용하여 풀어봅시다)
-
+```sql
+SELECT c."name" 
+FROM category c 
+WHERE c.category_id = ANY (SELECT fc.category_id 
+     FROM rental r 
+     JOIN inventory i ON r.inventory_id = i.inventory_id 
+     JOIN film_category fc ON i.film_id = fc.film_id
+     WHERE fc.category_id = c.category_id)
+```
 * 문제4번) 대여가 가장 많이 진행된 카테고리는 무엇인가요? (Any, All 조건 중 하나를 사용하여 풀어봅시다)
-
+```sql
+SELECT c."name" 
+FROM category c 
+WHERE c.category_id = ANY (SELECT fc.category_id 
+     FROM rental r 
+     JOIN inventory i ON r.inventory_id = i.inventory_id 
+     JOIN film_category fc ON i.film_id = fc.film_id
+     GROUP BY fc.category_id
+     ORDER BY count(DISTINCT r.rental_id) DESC 
+     LIMIT 1)
+```
 * 문제5번) dvd 대여를 제일 많이한 고객 이름은? (subquery 활용)
-
+```sql
+SELECT first_name 
+FROM customer c 
+WHERE c.customer_id IN (SELECT p.customer_id
+      FROM payment p
+      GROUP BY p.customer_id
+      ORDER BY count(p.rental_id) DESC 
+      LIMIT 1)
+```
 * 문제6번) 영화 카테고리값이 존재하지 않는 영화가 있나요?
-
+```sql
+SELECT *
+FROM film f 
+WHERE NOT EXISTS (SELECT
+      FROM film_category fc
+      WHERE fc.film_id = f.film_id)
+```
 ## No.7
 * 문제1번) 대여점(store)별 영화 재고(inventory) 수량과 전체 영화 재고 수량은? (grouping set)
 
